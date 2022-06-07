@@ -1,30 +1,45 @@
-const location1 = 3,
-    location2 = 4,
-    location3 = 2;
-
-let guess,
-    hits = 0,
-    guesses = 0,
-    isSunk = false;
-
-while (isSunk == false) {
-    guess = +prompt("Готовсья целься огонь! (Введи число от 0 до 6)", "");
-    if(guess < 0 || guess > 6) {
-        alert("Пожалуйста, введите корректное число!");
-    } else {
-        guesses = guesses + 1;
-        if(guess == location1 || guess == location2 || guess == location3) {
-            alert("Попал!");
-            hits = hits + 1;
-            if(hits == 3) {
-                isSunk = true;
-                alert("Ты потопил мой корабль");
-            }
-        } else {
-            alert("Мимо!");
+window.addEventListener("DOMContentLoaded", function () {
+    const view = {
+        displayMessage: function (msg) {
+            const messageArea = document.querySelector('#messageArea');
+            messageArea.textContent = msg;
+        },
+        displayHit: function(location) {
+            const hit = document.getElementById(location);
+            hit.classList.add('hit');
+        },
+        displayMiss: function(location) {
+            const miss = document.getElementById(location);
+            miss.classList.add('miss');
         }
-    }
-}
+    };
 
-const stats = `Ты совершил ${guesses} ходов чтобы потопить мой корабль, что означает ваша точность ${3 / guesses}`;
-alert(stats);
+    view.displayMessage('Tap tap, is this thing on?');
+
+    const model = {
+        boardSize: 7,
+        numShips: 3,
+        shipLenght: 3,
+        shipSunk: 0,
+        ships: [
+            {
+                location: ['06', '16', '26'],
+                hits: ['', '', ''],
+            },
+            {
+                location: ['24', '34', '44'],
+                hits: ['', '', ''],
+            },
+            {
+                location: ['10', '11', '12'],
+                hits: ['', '', ''],
+            },
+        ],
+        fire: function(guess) {
+            for (let i = 0; i < this.numShips; i++) {
+                const ship = this.ships[i];
+            }
+        }
+    };
+  
+});
