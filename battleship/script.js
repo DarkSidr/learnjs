@@ -22,15 +22,15 @@ window.addEventListener("DOMContentLoaded", function () {
         shipLenght: 3,
         shipSunk: 0,
         ships: [{
-                location: ['06', '16', '26'],
+                location: ['0', '0', '0'],
                 hits: ['', '', ''],
             },
             {
-                location: ['24', '34', '44'],
+                location: ['0', '0', '0'],
                 hits: ['', '', ''],
             },
             {
-                location: ['10', '11', '12'],
+                location: ['0', '0', '0'],
                 hits: ['', '', ''],
             },
         ],
@@ -60,6 +60,53 @@ window.addEventListener("DOMContentLoaded", function () {
                 }
             }
             return true;
+        },
+        generateShipLocations: function() {
+            let location;
+            for (let i = 0; i < this.numShips; i++) {
+                do {
+                    location = this.generateShip();
+                } while(this.collision(location));
+                this.ships[i].location = location;
+                
+            }
+        },
+        generateShip: function() {
+            const direction =Math.floor(Math.random() *2);
+            let row;
+            let col;
+            if(direction === 1) {
+                row = Math.floor(Math.random() * this.boardSize);
+                col = Math.floor(Math.random() * (this.boardSize  - this.shipLenght));
+            } else {
+                row = Math.floor(Math.random() * (this.boardSize  - this.shipLenght));
+                col = Math.floor(Math.random() * this.boardSize);
+            }
+
+            const newShipLocations = [];
+            for (let i = 0; i < this.shipLenght; i++) {
+                if(direction === 1) {
+                    newShipLocations.push(row + '' + (col + i));
+                } else {
+                    newShipLocations.push((row + i) + '' + col);
+                }
+            }
+
+            return newShipLocations;
+        },
+
+        collision: function(location) {
+            for (let i = 0; i < this.numShips; i++) {
+                const ship = model.ships[i];
+                for (let j = 0; j < location.length; j++) {
+                    if(ship.location.indexOf(location[j]) >= 0) {
+                        return true;
+                    }
+                    
+                }
+                
+            }
+            return false;
         }
     };
 
@@ -71,7 +118,7 @@ window.addEventListener("DOMContentLoaded", function () {
                 this.guesses++;
                 const hit = model.fire(location);
                 if(hit && model.shipSunk === model.numShips) {
-                    view.displayMessage('You sank all my battleships, in' + this.guesses + ' guesses');
+                    view.displayMessage('You sank all my battleships, in ' + this.guesses + ' guesses');
                 }
             }
         }
@@ -103,6 +150,7 @@ window.addEventListener("DOMContentLoaded", function () {
         fireButton.addEventListener('click', handleFireButton);
         const guessInput = document.getElementById('guessInput');
         guessInput.addEventListener('keypress', handleKeyPress);
+        model.generateShipLocations();
     }
 
     function handleFireButton(){
